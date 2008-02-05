@@ -1,7 +1,7 @@
 / no dayend except 0#, can connect to tick.k or chainedtick.k tickerplant
 / q chainedr.k :5110 -p 5111 </dev/null >foo 2>&1 & 
 
-/ q tick/chainedr.k [host]:port[:usr:pwd] [-p 5111] 
+/ q chainedr.k [host]:port[:usr:pwd] [-p 5111] 
 
 if[~"w"=*$.z.o;."\\sleep 1"]
 
