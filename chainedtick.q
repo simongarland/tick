@@ -21,7 +21,7 @@ if[not system"t";
 .u.rep:{(.[;();:;].)each x;}
 
 / connect to ticker plant for schema
-.u.init .u.rep(.u.m:hopen`$":",.u.x 1)".u.sub[`;`]"
+.u.init .u.rep(.u.m:hopen`$":",.u.x 0)".u.sub[`;`]"
 
 \
 /test
@@ -34,4 +34,4 @@ if[not system"t";
 >q tick/r.k ::5010 -p 5011       /rdb
 >q sym             -p 5012       /hdb
 >q tick/ssl.q sym :5010          /feed
->q chainedtick.k sym -p 5110     /chained tick 
+>q chainedtick.k   -p 5110     /chained tick 
