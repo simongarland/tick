@@ -25,13 +25,13 @@ if[not system"t";
 
 \
 /test
->q tick.k
+>q tick.q
 >q tick/ssl.q
->q chainedtick.k 
+>q chainedtick.q
 
 /run
->q tick.k sym  .   -p 5010       /tick
->q tick/r.k ::5010 -p 5011       /rdb
+>q tick.q sym  .   -p 5010       /tick
+>q tick/r.q :5010  -p 5011       /rdb
 >q sym             -p 5012       /hdb
->q tick/ssl.q sym :5010          /feed
->q chainedtick.k   -p 5110     /chained tick 
+>q tick/ssl.q sym  :5010         /feed
+>q chainedtick.q   -p 5110       /chained tick 
