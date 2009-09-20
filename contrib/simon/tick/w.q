@@ -2,6 +2,7 @@
 / q tick/w.q [tickerplanthost]:port[:usr:pwd] [hdbhost]:port[:usr:pwd] [-koe|keeponexit]
 / -keeponexit|koe - keep the (partial) contents of TMPSAVE directories on exit (default NO)
 / tmp storage in `:{pwd-after-logsync}/../tmp.pid.yyyy.mm.dd
+/ 2009.09.04 add disksort, faster disk-table sort on slower drives
 / 2008.11.30 add .z.exit and -keeponexit
 
 getTMPSAVE:{`$":../tmp.",(string .z.i),".",string x}  
@@ -17,8 +18,15 @@ append:{[t;data]
 		/ clear buffer
 		@[`.;t;0#]; 
 		]}
-
 upd:append
+
+disksort:{[t;c;a] 
+	if[not`s~attr(t:hsym t)c;
+		if[count t;
+			ii:iasc iasc flip c!t c,:();
+			if[not$[(0,-1+count ii)~(first;last)@\:ii;@[{`s#x;1b};ii;0b];0b];
+				{v:get y;if[not$[all(fv:first v)~/:256#v;all fv~/:v;0b];v[x]:v;y set v];}[ii]each` sv't,'get` sv t,`.d]];
+		@[t;first c;a]];t}
 
 / get the ticker plant and history ports, defaults are 5010,5012
 .u.x:.z.x,(count .z.x)_(":5010";":5012")
@@ -30,8 +38,9 @@ upd:append
 	/ clear buffer
 	@[`.;t;0#];
 	/ sort on disk by sym and set `p#
-	{@[`sym xasc` sv TMPSAVE,x,`;`sym;`p#]}each t;
-	/ move the complete partition to final home
+	/ {@[`sym xasc` sv TMPSAVE,x,`;`sym;`p#]}each t;
+	{disksort[` sv TMPSAVE,x,`;`sym;`p#]}each t;
+	/ move the complete partition to final home, use <mv> instead of built-in <r> if filesystem whines
 	system"r ",(1_string TMPSAVE)," ",-1_1_string .Q.par[`:.;x;`];
 	/ reset TMPSAVE for new day
 	TMPSAVE::getTMPSAVE .z.d;	
